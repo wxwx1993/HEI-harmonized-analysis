@@ -1,6 +1,7 @@
 library("gnm")
 
-dir_data = '/nfs/home/X/xwu/shared_space/ci3_analysis/pdez_measurementerror/National_Causal-master/'
+dir_data = "/nfs/nsaph_ci3/ci3_analysis/HEI_Final/Harmonized/"
+
 load(paste0(dir_data,"aggregate_data_rm.RData"))
 
 # cut-off
