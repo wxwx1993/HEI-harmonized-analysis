@@ -114,7 +114,6 @@ exp(10*matchingrm_gnm_ozone$coefficients[1])
 
 # trimed
 # GPS: PM | potential confounders + no2
-#c2 = as.data.frame(data.matrix(zip_year[, c(2, 10:13,15:16,19)]))
 match_pop_no2 <- generate_pseudo_pop(Y = zip_year$zip,
                                        w = zip_year$pm25,
                                        c = zip_year[, c(2, 10:13,15:16,19)],
@@ -180,6 +179,8 @@ exp(10*matchingrm_gnm_no2$coefficients[1])
 
 # trimed
 # GPS: PM | potential confounders + ox
+## Error in if (abs(dev - devold)/(0.1 + abs(dev)) < control$epsilon) { : 
+## missing value where TRUE/FALSE needed
 match_pop_ox <- generate_pseudo_pop(Y = zip_year$zip,
                                      w = zip_year$pm25,
                                      c = zip_year[, c(2, 10:13,15:16,20)],
@@ -208,17 +209,6 @@ colnames(match_pop_ox_data)[1] <- "zip"
 aggregate_data_rm_ox_counter <- merge(aggregate_data_rm, match_pop_ox_data[, c("year", "zip", "counter")], by = c("year", "zip"), all.y = TRUE)
 aggregate_data_rm_ox_counter <- subset(aggregate_data_rm_ox_counter, counter > 0)
 
-aggregate_data_rm_ox_counter2 = aggregate_data_rm_ox_counter
-aggregate_data_rm_ox_counter2$followup_year[aggregate_data_rm_ox_counter2$followup_year >= 12] = 12
-aggregate_data_rm_ox_counter2$entry_age_break[aggregate_data_rm_ox_counter2$entry_age_break >= 7] = 7
-aggregate_data_rm_ox_counter2 = subset(aggregate_data_rm_ox_counter2, !(race %in% c(0,6)))
-
-cont_table_all = table(aggregate_data_rm_ox_counter2$sex, 
-                       aggregate_data_rm_ox_counter2$dual, 
-                       aggregate_data_rm_ox_counter2$race, 
-                       aggregate_data_rm_ox_counter2$entry_age_break, 
-                       aggregate_data_rm_ox_counter2$followup_year)
-
 matchingrm_gnm_ox <- summary(gnm(dead ~ pm25 + ox + offset(log(time_count)), 
                                   eliminate = (as.factor(sex):as.factor(race):as.factor(dual):as.factor(entry_age_break):as.factor(followup_year)),
                                   data = aggregate_data_rm_ox_counter2,
@@ -227,6 +217,8 @@ matchingrm_gnm_ox <- summary(gnm(dead ~ pm25 + ox + offset(log(time_count)),
                                  trace = TRUE,
                                  tolerance = 1e-10))
 exp(10*matchingrm_gnm_ox$coefficients[1])
+
+#########################################################################
 ## no trim
 ## Error in if (abs(dev - devold)/(0.1 + abs(dev)) < control$epsilon) { : 
 ## missing value where TRUE/FALSE needed
